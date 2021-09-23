@@ -33,7 +33,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.3.1'
     
     // Mange start activity
-	implementation 'com.itxca.msa:msa:1.0.0'
+    implementation 'com.itxca.msa:msa:1.0.0'
 }
 ```
 
@@ -56,8 +56,8 @@ fun msa(): MangeStartActivity = MangeStartActivity()
 ```kotlin
 abstract class BaseActivity : AppCompatActivity(), IMsa by msa() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        // 注意需先在super.onCreate 初始化 initMangeStartActivity
-        initMangeStartActivity(this)
+        // 注意需先在super.onCreate 初始化 initManageStartActivity
+        initManageStartActivity(this)
         super.onCreate(savedInstanceState)
     }
 }
@@ -66,8 +66,8 @@ abstract class BaseActivity : AppCompatActivity(), IMsa by msa() {
 ```kotlin
 abstract class BaseFragment : Fragment(), IMsa by msa()  {
     override fun onCreate(savedInstanceState: Bundle?) {
-        // 注意需先在super.onCreate 初始化 initMangeStartActivity
-        initMangeStartActivity(this)
+        // 注意需先在super.onCreate 初始化 initManageStartActivity
+        initManageStartActivity(this)
         super.onCreate(savedInstanceState)
     }
 }
@@ -82,8 +82,8 @@ abstract class BaseFragment : Fragment(), IMsa by msa()  {
 class SampleActivity : AppCompatActivity(), IMsa by msa() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // 注意需先在super.onCreate 初始化 `initMangeStartActivity`
-        initMangeStartActivity(this)
+        // 注意需先在super.onCreate 初始化 `initManageStartActivity`
+        initManageStartActivity(this)
         super.onCreate(savedInstanceState)
     }
 
@@ -159,7 +159,7 @@ class SampleActivity : AppCompatActivity(), IMsa by msa() {
             }
 
             // Android习惯模式，传入Intent即可
-            val (code3: kotlin.Int, data3: Intent?) = startActivityForResultSync(Intent(this@SampleActivity, MainActivity::class.java).apply {
+            val (code3: Int, data3: Intent?) = startActivityForResultSync(Intent(this@SampleActivity, MainActivity::class.java).apply {
                 putExtra("key", "value")
             })
 
