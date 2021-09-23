@@ -1,3 +1,4 @@
+[![MavenCentral](https://img.shields.io/maven-central/v/com.itxca.msa/msa)](https://search.maven.org/artifact/com.itxca.msa/msa)
 [![API](https://img.shields.io/badge/API-14%2B-blue.svg?style=flat)](https://android-arsenal.com/api?level=14)
 [![License](http://img.shields.io/badge/License-MIT-brightgreen.svg?style=flat)](https://opensource.org/licenses/MIT)
 
