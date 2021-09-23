@@ -15,8 +15,7 @@ ActivityResultLauncher辅助类，一行代码解决~~startActivityForResult~~�
 ---
 ### 环境依赖
 
-`root gradle`
-
+root gradle:
 ```groovy
 allprojects {
     repositories {
@@ -26,8 +25,7 @@ allprojects {
 }
 ```
 
-`project dependencies`
-
+project dependencies:
 ```groovy
 dependencies {
     // need androidx appcompat
@@ -38,9 +36,10 @@ dependencies {
 }
 ```
 
+---
 ### 文档
 
-##### 扩展简写说明
+#### 扩展简写说明
 
 可以写`IMangeStartActivity by MangeStartActivity() `, 也可以使用`IMsa by msa()`。完全一样，只是实现了一个简写。
 
@@ -52,7 +51,7 @@ typealias IMsa =  IMangeStartActivity
 fun msa(): MangeStartActivity = MangeStartActivity()
 ```
 
-##### 推荐基于Base类，方便统一管理。
+#### 推荐基于Base类，方便统一管理。
 
 ```kotlin
 abstract class BaseActivity : AppCompatActivity(), IMsa by msa() {
@@ -74,7 +73,7 @@ abstract class BaseFragment : Fragment(), IMsa by msa()  {
 }
 ```
 
-##### SampleActivity
+#### SampleActivity
 
 完整使用方法说明
 
@@ -172,8 +171,6 @@ class SampleActivity : AppCompatActivity(), IMsa by msa() {
     }
 }
 ```
-
-
 
 ---
 ### Screenshots
