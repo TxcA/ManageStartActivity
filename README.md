@@ -32,7 +32,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.3.1'
     
     // Mange start activity
-    implementation 'com.itxca.msa:msa:1.0.0'
+    implementation 'com.itxca.msa:msa:1.0.1'
 }
 ```
 
@@ -171,6 +171,9 @@ class SampleActivity : AppCompatActivity(), IMsa by msa() {
     }
 }
 ```
+---
+### Change
+[更新历史](CHANGE.md)
 
 ---
 ### Screenshots
