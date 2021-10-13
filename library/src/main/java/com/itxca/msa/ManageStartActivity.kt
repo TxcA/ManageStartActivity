@@ -74,7 +74,7 @@ class ManageStartActivity : IManageStartActivity {
                     )
             }
             else -> {
-                throw IllegalArgumentException("IStartActivityForResult only support `ComponentActivity` and `Fragment`.")
+                throw IllegalArgumentException("IManageStartActivity only support `ComponentActivity` and `Fragment`.")
             }
         }
     }
