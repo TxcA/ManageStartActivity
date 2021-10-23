@@ -23,6 +23,9 @@ class MainActivity : BaseActivity() {
         viewBinding.startActivityForResultSyncTarget.setOnClickListener(::startActivityForResultSyncTarget)
         viewBinding.startActivityForResultSyncIntent.setOnClickListener(::startActivityForResultSyncIntent)
         viewBinding.startTestFragment.setOnClickListener(::startTestFragment)
+        viewBinding.startActivityResultContracts.setOnClickListener{
+            startActivity(ActivityResultContractsActivity::class)
+        }
     }
 
     private fun startActivityTarget(v: View) {

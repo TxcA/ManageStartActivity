@@ -12,6 +12,8 @@ ActivityResultLauncher辅助类，一行代码解决~~startActivityForResult~~�
 
 > 由于使用到了委托，所以只支持Kotlin，Java无法使用（或者说是没有使用的意义，变成了普通的方法调用）
 
+Android提供的`ActivityResultContracts`默认协定完整sample [ActivityResultContractsActivity](https://github.com/TxcA/ManageStartActivity/blob/master/app/src/main/java/com/itxca/sample/msa/ActivityResultContractsActivity.kt)
+
 ---
 ### 环境依赖
 
