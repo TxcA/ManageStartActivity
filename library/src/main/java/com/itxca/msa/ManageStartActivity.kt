@@ -40,7 +40,7 @@ class ManageStartActivity : IManageStartActivity {
     /**
      * current context
      */
-    private var context: Context? = null
+    private var msaContext: Context? = null
 
     /**
      * current activity result callback
@@ -55,20 +55,18 @@ class ManageStartActivity : IManageStartActivity {
     /**
      * {@inheritDoc}
      */
-    override fun <Host : LifecycleOwner> initManageStartActivity(lifecycleHost: Host) {
-        when (lifecycleHost) {
+    override fun <Host : LifecycleOwner> Host.initManageStartActivity() {
+        when (this) {
             is ComponentActivity -> {
-                context = lifecycleHost
-                activityForResult =
-                    lifecycleHost.registerForActivityResult(
+                msaContext = this
+                activityForResult = registerForActivityResult(
                         ActivityResultContracts.StartActivityForResult(),
                         activityResultCallback
                     )
             }
             is Fragment -> {
-                context = lifecycleHost.requireContext()
-                activityForResult =
-                    lifecycleHost.registerForActivityResult(
+                msaContext = requireContext()
+                activityForResult = registerForActivityResult(
                         ActivityResultContracts.StartActivityForResult(),
                         activityResultCallback
                     )
@@ -80,9 +78,9 @@ class ManageStartActivity : IManageStartActivity {
     }
 
     /**
-     * [context] run on not null
+     * [msaContext] run on not null
      */
-    private fun runSafeContext(block: Context.() -> Unit) = context?.block()
+    private fun runSafeContext(block: Context.() -> Unit) = msaContext?.block()
 
     /**
      * {@inheritDoc}

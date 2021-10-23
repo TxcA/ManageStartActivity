@@ -18,9 +18,9 @@ import kotlin.reflect.KClass
 interface IManageStartActivity {
     /**
      * Initialized host
-     * @param lifecycleHost `ComponentActivity` or `Fragment`
+     * @receiver lifecycleHost `ComponentActivity` or `Fragment`
      */
-    fun <Host : LifecycleOwner> initManageStartActivity(lifecycleHost: Host)
+    fun <Host : LifecycleOwner> Host.initManageStartActivity()
 
     /**
      * Start activity for result
