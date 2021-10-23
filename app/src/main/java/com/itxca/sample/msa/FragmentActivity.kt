@@ -23,7 +23,6 @@ class FragmentActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(viewBinding.root)
-
         title = this::class.java.simpleName
 
         viewBinding.viewPager.adapter = FragmentAdapter(

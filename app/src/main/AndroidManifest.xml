@@ -2,6 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.itxca.sample.msa">
 
+    <!--
+        权限均为[ActivityResultContractsActivity]示例ActivityResultContracts使用
+        ManageStartActivity sample 运行时不需要权限
+     -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="false"
         android:icon="@mipmap/logo"
@@ -9,6 +17,7 @@
         android:roundIcon="@mipmap/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.ManageStartActivity">
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -16,8 +25,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".SecondActivity" />
         <activity android:name=".FragmentActivity" />
+        <activity android:name=".ActivityResultContractsActivity" />
+        <activity android:name=".ContractActivity" />
     </application>
-
 </manifest>

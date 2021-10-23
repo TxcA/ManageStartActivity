@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingStart="12dp"
     android:paddingEnd="12dp"
@@ -21,43 +21,36 @@
 
     <Button
         android:id="@+id/start_activity_target"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="startActivity(target)"
-        android:textAllCaps="false" />
+        style="@style/mas_button"
+        android:text="startActivity(target)" />
 
     <Button
         android:id="@+id/start_activity_for_result_target"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="startActivityForResult(target)"
-        android:textAllCaps="false" />
+        style="@style/mas_button"
+        android:text="startActivityForResult(target)" />
 
     <Button
         android:id="@+id/start_activity_for_result_intent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="startActivityForResult(intent)"
-        android:textAllCaps="false" />
+        style="@style/mas_button"
+        android:text="startActivityForResult(intent)" />
 
     <Button
         android:id="@+id/start_activity_for_result_sync_target"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="startActivityForResultSync(target)"
-        android:textAllCaps="false" />
+        style="@style/mas_button"
+        android:text="startActivityForResultSync(target)" />
 
     <Button
         android:id="@+id/start_activity_for_result_sync_intent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="startActivityForResultSync(intent)"
-        android:textAllCaps="false" />
+        style="@style/mas_button"
+        android:text="startActivityForResultSync(intent)" />
 
     <Button
         android:id="@+id/start_test_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="startTestFragment"
-        android:textAllCaps="false" />
+        style="@style/mas_button"
+        android:text="startTestFragment" />
+
+    <Button
+        android:id="@+id/start_activity_result_contracts"
+        style="@style/mas_button"
+        android:text="startActivityResultContracts" />
 </LinearLayout>
