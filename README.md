@@ -34,7 +34,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.3.1'
     
     // Mange start activity
-    implementation 'com.itxca.msa:msa:1.0.2'
+    implementation 'com.itxca.msa:msa:1.0.3'
 }
 ```
 
