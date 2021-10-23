@@ -18,7 +18,7 @@ import com.itxca.msa.msa
 
 abstract class BaseFragment : Fragment(), IMsa by msa()  {
     override fun onCreate(savedInstanceState: Bundle?) {
-        initManageStartActivity(this)
+        initManageStartActivity()
         super.onCreate(savedInstanceState)
     }
 }

@@ -17,7 +17,7 @@ import com.itxca.msa.msa
 
 abstract class BaseActivity : AppCompatActivity(), IMsa by msa() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        initManageStartActivity(this)
         super.onCreate(savedInstanceState)
+        initManageStartActivity()
     }
 }
