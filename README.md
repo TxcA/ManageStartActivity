@@ -32,7 +32,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.3.1'
     
     // Mange start activity
-    implementation 'com.itxca.msa:msa:1.0.1'
+    implementation 'com.itxca.msa:msa:1.0.2'
 }
 ```
 
@@ -56,8 +56,9 @@ fun msa(): MangeStartActivity = MangeStartActivity()
 ```kotlin
 abstract class BaseActivity : AppCompatActivity(), IMsa by msa() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        // 注意需先在super.onCreate 初始化 initManageStartActivity
-        initManageStartActivity(this)
+        // 推荐在super.onCreate 前初始化 `initMangeStartActivity`
+        // 这样就能防止还未初始化`ActivityResultLauncher`就调用`launch`导致`UninitializedPropertyAccessException`异常
+        initManageStartActivity()
         super.onCreate(savedInstanceState)
     }
 }
@@ -66,8 +67,9 @@ abstract class BaseActivity : AppCompatActivity(), IMsa by msa() {
 ```kotlin
 abstract class BaseFragment : Fragment(), IMsa by msa()  {
     override fun onCreate(savedInstanceState: Bundle?) {
-        // 注意需先在super.onCreate 初始化 initManageStartActivity
-        initManageStartActivity(this)
+        // 推荐在super.onCreate 前初始化 `initMangeStartActivity`
+        // 这样就能防止还未初始化`ActivityResultLauncher`就调用`launch`导致`UninitializedPropertyAccessException`异常
+        initManageStartActivity()
         super.onCreate(savedInstanceState)
     }
 }
@@ -82,8 +84,9 @@ abstract class BaseFragment : Fragment(), IMsa by msa()  {
 class SampleActivity : AppCompatActivity(), IMsa by msa() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // 注意需先在super.onCreate 初始化 `initManageStartActivity`
-        initManageStartActivity(this)
+        // 推荐在super.onCreate 前初始化 `initMangeStartActivity`
+        // 这样就能防止还未初始化`ActivityResultLauncher`就调用`launch`导致`UninitializedPropertyAccessException`异常
+        initManageStartActivity()
         super.onCreate(savedInstanceState)
     }
 
@@ -171,6 +174,27 @@ class SampleActivity : AppCompatActivity(), IMsa by msa() {
     }
 }
 ```
+
+### 完整API
+```kotlin
+// startActivityForResult
+fun startActivityForResult(target: KClass<out Activity>, block: Intent.() -> Unit = {}, result: StartActivityResult)
+fun <T : KClass<out Activity>> T.startForResult(block: Intent.() -> Unit = {}, result: StartActivityResult)
+suspend fun startActivityForResultSync(target: KClass<out Activity>, block: Intent.() -> Unit = {}): Result
+suspend fun <T : KClass<out Activity>> T.startForResultSync( block: Intent.() -> Unit = {}): Result
+
+// intent startActivityForResult
+fun startActivityForResult(intent: Intent, result: StartActivityResult)
+fun Intent.startForResult(result: StartActivityResult)
+suspend fun startActivityForResultSync(intent: Intent): Result
+suspend fun Intent.startForResultSync(): Result
+
+// startActivity
+fun startActivity(target: KClass<out Activity>, block: Intent.() -> Unit = {})
+fun <T : KClass<out Activity>> T.start(block: Intent.() -> Unit = {})
+fun Intent.start()
+```
+
 ---
 ### Change
 [更新历史](CHANGE.md)
