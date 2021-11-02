@@ -41,6 +41,8 @@ dependencies {
 ---
 ### 文档
 
+- **1.0.4 破坏性升级, 现在必须在`super.onCreate()`后初始化 `initMangeStartActivity`, 因为从`1.0.4`开始, 需要使用`SavedStateRegistry`来保存回调状态**
+
 #### 扩展简写说明
 
 可以写`IMangeStartActivity by MangeStartActivity() `, 也可以使用`IMsa by msa()`。完全一样，只是实现了一个简写。
@@ -58,10 +60,10 @@ fun msa(): MangeStartActivity = MangeStartActivity()
 ```kotlin
 abstract class BaseActivity : AppCompatActivity(), IMsa by msa() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        // 推荐在super.onCreate 前初始化 `initMangeStartActivity`
-        // 这样就能防止还未初始化`ActivityResultLauncher`就调用`launch`导致`UninitializedPropertyAccessException`异常
-        initManageStartActivity()
         super.onCreate(savedInstanceState)
+        // 从**1.0.4**开始, 必须在`super.onCreate()`后初始化 `initMangeStartActivity`
+        // 因为需要使用 `SavedStateRegistry` 来保存回调状态
+        initManageStartActivity()
     }
 }
 ```
@@ -69,10 +71,10 @@ abstract class BaseActivity : AppCompatActivity(), IMsa by msa() {
 ```kotlin
 abstract class BaseFragment : Fragment(), IMsa by msa()  {
     override fun onCreate(savedInstanceState: Bundle?) {
-        // 推荐在super.onCreate 前初始化 `initMangeStartActivity`
-        // 这样就能防止还未初始化`ActivityResultLauncher`就调用`launch`导致`UninitializedPropertyAccessException`异常
-        initManageStartActivity()
         super.onCreate(savedInstanceState)
+        // 从**1.0.4**开始, 必须在`super.onCreate()`后初始化 `initMangeStartActivity`
+        // 因为需要使用 `SavedStateRegistry` 来保存回调状态
+        initManageStartActivity()
     }
 }
 ```
@@ -86,10 +88,10 @@ abstract class BaseFragment : Fragment(), IMsa by msa()  {
 class SampleActivity : AppCompatActivity(), IMsa by msa() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // 推荐在super.onCreate 前初始化 `initMangeStartActivity`
-        // 这样就能防止还未初始化`ActivityResultLauncher`就调用`launch`导致`UninitializedPropertyAccessException`异常
-        initManageStartActivity()
         super.onCreate(savedInstanceState)
+        // 从**1.0.4**开始, 必须在`super.onCreate()`后初始化 `initMangeStartActivity`
+        // 因为需要使用 `SavedStateRegistry` 来保存回调状态
+        initManageStartActivity()
     }
 
     /**

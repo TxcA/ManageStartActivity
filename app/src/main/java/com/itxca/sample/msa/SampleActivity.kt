@@ -23,10 +23,10 @@ import kotlinx.coroutines.launch
 class SampleActivity : AppCompatActivity(), IMsa by msa() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // 推荐在super.onCreate 前初始化 `initMangeStartActivity`
-        // 这样就能防止还未初始化`ActivityResultLauncher`就调用`launch`导致`UninitializedPropertyAccessException`异常
-        initManageStartActivity()
         super.onCreate(savedInstanceState)
+        // 从1.0.4开始, 必须在super.onCreate()后初始化 initMangeStartActivity
+        // 因为需要使用 SavedStateRegistry 来保存回调状态
+        initManageStartActivity()
     }
 
     /**
