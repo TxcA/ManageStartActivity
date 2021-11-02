@@ -1,7 +1,6 @@
 package com.itxca.msa
 
 import android.content.Intent
-import android.os.Parcelable
 import androidx.annotation.Keep
 
 /**
