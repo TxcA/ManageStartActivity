@@ -3,13 +3,19 @@ package com.itxca.msa
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.OnLifecycleEvent
+import androidx.savedstate.SavedStateRegistryOwner
+import java.util.*
 import java.util.concurrent.LinkedBlockingDeque
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -25,11 +31,11 @@ import kotlin.reflect.KClass
  *
  **/
 
-class ManageStartActivity : IManageStartActivity {
+class ManageStartActivity : IManageStartActivity, LifecycleObserver {
     /**
      * start activity for result deque
      */
-    private val startActivityResultDeque = LinkedBlockingDeque<StartActivityResult>()
+    private lateinit var startActivityResultDeque : LinkedBlockingDeque<StartActivityResult>
 
     /**
      * https://developer.android.google.cn/reference/kotlin/androidx/activity/result/ActivityResultLauncher.html
@@ -48,7 +54,8 @@ class ManageStartActivity : IManageStartActivity {
     private val activityResultCallback = object : ActivityResultCallback<ActivityResult> {
         override fun onActivityResult(result: ActivityResult?) {
             result ?: return
-            startActivityResultDeque.pop()?.invoke(result.resultCode, result.data)
+            checkInit()
+            startActivityResultDeque.pollFirst()?.invoke(result.resultCode, result.data)
         }
     }
 
@@ -58,6 +65,7 @@ class ManageStartActivity : IManageStartActivity {
     override fun <Host : LifecycleOwner> Host.initManageStartActivity() {
         when (this) {
             is ComponentActivity -> {
+                startActivityResultDeque = bindHostSaveState() ?: LinkedBlockingDeque()
                 msaContext = this
                 activityForResult = registerForActivityResult(
                         ActivityResultContracts.StartActivityForResult(),
@@ -65,6 +73,7 @@ class ManageStartActivity : IManageStartActivity {
                     )
             }
             is Fragment -> {
+                startActivityResultDeque = bindHostSaveState() ?: LinkedBlockingDeque()
                 msaContext = requireContext()
                 activityForResult = registerForActivityResult(
                         ActivityResultContracts.StartActivityForResult(),
@@ -78,6 +87,44 @@ class ManageStartActivity : IManageStartActivity {
     }
 
     /**
+     * save host callback state
+     */
+    private fun SavedStateRegistryOwner.bindHostSaveState(): LinkedBlockingDeque<StartActivityResult>? {
+        lifecycle.addObserver(this@ManageStartActivity)
+
+       val saveStateKey = savedStateRegistry.consumeRestoredStateForKey(SAVE_STATE_KEY)
+            ?.getString(SAVE_STATE_BUNDLE_KEY) ?: UUID.randomUUID().toString()
+
+        savedStateRegistry.registerSavedStateProvider(SAVE_STATE_KEY) {
+            Bundle().apply {
+                if (::startActivityResultDeque.isInitialized) {
+                    msaResultSaveState[saveStateKey] = startActivityResultDeque
+                    putString(SAVE_STATE_BUNDLE_KEY, saveStateKey)
+                }
+            }
+        }
+
+        return msaResultSaveState.remove(saveStateKey)
+    }
+
+    /**
+     * unused
+     * Reserved attempts to better solve `Activity Recreate`
+     */
+    @Suppress("unused")
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    private fun onHostDestroy(){ }
+
+    /**
+     * check is init
+     */
+    private fun checkInit(){
+        if (!::startActivityResultDeque.isInitialized){
+            throw IllegalArgumentException("call `initManageStartActivity` required before `onResume`.")
+        }
+    }
+
+    /**
      * [msaContext] run on not null
      */
     private fun runSafeContext(block: Context.() -> Unit) = msaContext?.block()
@@ -87,7 +134,8 @@ class ManageStartActivity : IManageStartActivity {
      */
     override fun startActivityForResult(target: KClass<out Activity>, block: Intent.() -> Unit, result: StartActivityResult) {
         runSafeContext {
-            startActivityResultDeque.push(result)
+            checkInit()
+            startActivityResultDeque.offerFirst(result)
             activityForResult.launch(Intent(this, target.java).apply(block))
         }
     }
@@ -104,7 +152,8 @@ class ManageStartActivity : IManageStartActivity {
      */
     override fun startActivityForResult(intent: Intent, result: StartActivityResult) {
         runSafeContext {
-            startActivityResultDeque.push(result)
+            checkInit()
+            startActivityResultDeque.offerFirst(result)
             activityForResult.launch(intent)
         }
     }
@@ -169,5 +218,22 @@ class ManageStartActivity : IManageStartActivity {
         runSafeContext {
             this.startActivity(this@start)
         }
+    }
+
+    companion object {
+        /**
+         * key is [androidx.savedstate.SavedStateRegistry.SavedStateProvider]
+         */
+        private const val SAVE_STATE_KEY = "mas_save_state"
+
+        /**
+         * save state key
+         */
+        private const val SAVE_STATE_BUNDLE_KEY = "mas_bundle_tag"
+
+        /**
+         * result save
+         */
+        private val msaResultSaveState = LinkedHashMap<String, LinkedBlockingDeque<StartActivityResult>>()
     }
 }
