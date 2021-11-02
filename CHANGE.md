@@ -1,6 +1,9 @@
 #### 更新历史
 
 ---
+- 1.0.4
+修复系统配置变更(如屏幕旋转)导致`Activity重建`后回调被清空的问题
+
 - 1.0.3
 移除引用`androidx.activity:activity-ktx:1.3.1`后导致需要`minCompileSdk (30)`的问题
 
