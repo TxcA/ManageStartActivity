@@ -10,10 +10,7 @@ import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.OnLifecycleEvent
 import androidx.savedstate.SavedStateRegistryOwner
 import java.util.*
 import java.util.concurrent.LinkedBlockingDeque
@@ -31,7 +28,7 @@ import kotlin.reflect.KClass
  *
  **/
 
-class ManageStartActivity : IManageStartActivity, LifecycleObserver {
+class ManageStartActivity : IManageStartActivity {
     /**
      * start activity for result deque
      */
@@ -90,8 +87,6 @@ class ManageStartActivity : IManageStartActivity, LifecycleObserver {
      * save host callback state
      */
     private fun SavedStateRegistryOwner.bindHostSaveState(): LinkedBlockingDeque<StartActivityResult>? {
-        lifecycle.addObserver(this@ManageStartActivity)
-
        val saveStateKey = savedStateRegistry.consumeRestoredStateForKey(SAVE_STATE_KEY)
             ?.getString(SAVE_STATE_BUNDLE_KEY) ?: UUID.randomUUID().toString()
 
@@ -106,14 +101,6 @@ class ManageStartActivity : IManageStartActivity, LifecycleObserver {
 
         return msaResultSaveState.remove(saveStateKey)
     }
-
-    /**
-     * unused
-     * Reserved attempts to better solve `Activity Recreate`
-     */
-    @Suppress("unused")
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    private fun onHostDestroy(){ }
 
     /**
      * check is init
