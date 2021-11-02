@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.viewModels
 import com.itxca.sample.msa.base.BaseFragment
 import com.itxca.sample.msa.databinding.FragmentTestBinding
 
@@ -21,7 +22,9 @@ import com.itxca.sample.msa.databinding.FragmentTestBinding
  **/
 @SuppressLint("SetTextI18n")
 class TestFragment : BaseFragment() {
+
     private lateinit var viewBinding: FragmentTestBinding
+    private val viewModel: LogViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,6 +41,14 @@ class TestFragment : BaseFragment() {
         viewBinding.finish.setOnClickListener(::finish)
         viewBinding.finishResultOk.setOnClickListener(::finishResultOk)
         viewBinding.startActivityForResultIntent.setOnClickListener(::startActivityForResultIntent)
+
+        viewModel.logString.observe(viewLifecycleOwner){ result ->
+            result ?: return@observe
+            viewBinding.tvLogcat.text = """
+                code: ${result.resultCode}
+                data: ${result.data?.getStringExtra(SecondActivity.EXTRA_DATA)}
+            """.trimIndent()
+        }
     }
 
     private fun finish(v: View) {
@@ -55,10 +66,7 @@ class TestFragment : BaseFragment() {
         viewBinding.tvLogcat.text = ""
         startActivityForResult(SecondActivity.buildIntent(requireContext(), extraMessage()))
         { code, data ->
-            viewBinding.tvLogcat.text = """
-                code: $code
-                data: ${data?.getStringExtra(SecondActivity.EXTRA_DATA)}
-            """.trimIndent()
+            viewModel.printLog(code, data)
         }
     }
 
