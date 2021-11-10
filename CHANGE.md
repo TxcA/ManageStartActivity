@@ -1,6 +1,9 @@
 #### 更新历史
 
 ---
+- 1.0.5
+兼容`ActivityResultLauncher.launch(I input, ActivityOptionsCompat options)`, 支持Activity启动时配置`ActivityOptionsCompat`
+
 - 1.0.4
 修复系统配置变更(如屏幕旋转)导致`Activity重建`后回调被清空的问题
 
