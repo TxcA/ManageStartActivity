@@ -13,7 +13,7 @@ import androidx.annotation.Keep
  *
  **/
 
-typealias  StartActivityResult = (
+typealias StartActivityResult = (
     /**
      * Activity result code
      */
@@ -21,7 +21,8 @@ typealias  StartActivityResult = (
     /**
      * Activity result intent
      */
-    data: Intent?) -> Unit
+    data: Intent?,
+) -> Unit
 
 @Keep
 data class Result(
@@ -32,4 +33,5 @@ data class Result(
     /**
      * Activity result intent
      */
-    val data: Intent?)
+    val data: Intent?,
+)

@@ -3,12 +3,14 @@ package com.itxca.msa
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.savedstate.SavedStateRegistryOwner
@@ -119,44 +121,44 @@ class ManageStartActivity : IManageStartActivity {
     /**
      * {@inheritDoc}
      */
-    override fun startActivityForResult(target: KClass<out Activity>, block: Intent.() -> Unit, result: StartActivityResult) {
+    override fun startActivityForResult(target: KClass<out Activity>, block: Intent.() -> Unit, options: () -> ActivityOptionsCompat?, result: StartActivityResult) {
         runSafeContext {
             checkInit()
             startActivityResultDeque.offerFirst(result)
-            activityForResult.launch(Intent(this, target.java).apply(block))
+            activityForResult.launch(Intent(this, target.java).apply(block), options.invoke())
         }
     }
 
     /**
      * {@inheritDoc}
      */
-    override fun <T : KClass<out Activity>> T.startForResult(block: Intent.() -> Unit, result: StartActivityResult) {
-        startActivityForResult(this,block,result)
+    override fun <T : KClass<out Activity>> T.startForResult(block: Intent.() -> Unit, options: () -> ActivityOptionsCompat?, result: StartActivityResult) {
+        startActivityForResult(this, block, options, result)
     }
 
     /**
      * {@inheritDoc}
      */
-    override fun startActivityForResult(intent: Intent, result: StartActivityResult) {
+    override fun startActivityForResult(intent: Intent, options: () -> ActivityOptionsCompat?, result: StartActivityResult) {
         runSafeContext {
             checkInit()
             startActivityResultDeque.offerFirst(result)
-            activityForResult.launch(intent)
+            activityForResult.launch(intent, options.invoke())
         }
     }
 
     /**
      * {@inheritDoc}
      */
-    override fun Intent.startForResult(result: StartActivityResult) {
-        startActivityForResult(this,result)
+    override fun Intent.startForResult(options: () -> ActivityOptionsCompat?, result: StartActivityResult) {
+        startActivityForResult(this, options, result)
     }
 
     /**
      * {@inheritDoc}
      */
-    override suspend fun startActivityForResultSync(target: KClass<out Activity>, block: Intent.() -> Unit): Result = suspendCoroutine {
-        startActivityForResult(target, block) { code, intent ->
+    override suspend fun startActivityForResultSync(target: KClass<out Activity>, options: () -> ActivityOptionsCompat?, block: Intent.() -> Unit): Result = suspendCoroutine {
+        startActivityForResult(target, block, options) { code, intent ->
             it.resume(Result(code, intent))
         }
     }
@@ -164,14 +166,14 @@ class ManageStartActivity : IManageStartActivity {
     /**
      * {@inheritDoc}
      */
-    override suspend fun <T : KClass<out Activity>> T.startForResultSync(block: Intent.() -> Unit): Result
-        = startActivityForResultSync(this,block)
+    override suspend fun <T : KClass<out Activity>> T.startForResultSync(options: () -> ActivityOptionsCompat?, block: Intent.() -> Unit): Result
+        = startActivityForResultSync(this, options, block)
 
     /**
      * {@inheritDoc}
      */
-    override suspend fun startActivityForResultSync(intent: Intent): Result = suspendCoroutine {
-        startActivityForResult(intent) { code, intent ->
+    override suspend fun startActivityForResultSync(intent: Intent, options: () -> ActivityOptionsCompat?): Result = suspendCoroutine {
+        startActivityForResult(intent, options) { code, intent ->
             it.resume(Result(code, intent))
         }
     }
@@ -179,31 +181,39 @@ class ManageStartActivity : IManageStartActivity {
     /**
      * {@inheritDoc}
      */
-    override suspend fun Intent.startForResultSync(): Result
-        = startActivityForResultSync(this)
+    override suspend fun Intent.startForResultSync(options: () -> ActivityOptionsCompat?): Result
+        = startActivityForResultSync(this, options)
 
     /**
      * {@inheritDoc}
      */
-    override fun startActivity(target: KClass<out Activity>, block: Intent.() -> Unit) {
+    override fun startActivity(target: KClass<out Activity>, options: () -> ActivityOptionsCompat?, block: Intent.() -> Unit) {
         runSafeContext {
-            startActivity(Intent(this, target.java).apply(block))
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                startActivity(Intent(this, target.java).apply(block), options()?.toBundle())
+            } else {
+                startActivity(Intent(this, target.java).apply(block))
+            }
         }
     }
 
     /**
      * {@inheritDoc}
      */
-    override fun <T : KClass<out Activity>> T.start(block: Intent.() -> Unit) {
-        startActivity(this,block)
+    override fun <T : KClass<out Activity>> T.start(options: () -> ActivityOptionsCompat?, block: Intent.() -> Unit) {
+        startActivity(this, options, block)
     }
 
     /**
      * {@inheritDoc}
      */
-    override fun Intent.start() {
+    override fun Intent.start(options: () -> ActivityOptionsCompat?) {
         runSafeContext {
-            this.startActivity(this@start)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                startActivity(this@start, options()?.toBundle())
+            }else{
+                startActivity(this@start)
+            }
         }
     }
 
