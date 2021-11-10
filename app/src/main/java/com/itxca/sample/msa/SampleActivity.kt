@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
  *
  **/
 
-// 注意实现 `IMsa by msa()`
+// 注意实现 `IMsa by msa()` 委托
 @Suppress("unused")
 class SampleActivity : AppCompatActivity(), IMsa by msa() {
 
@@ -35,7 +35,10 @@ class SampleActivity : AppCompatActivity(), IMsa by msa() {
      */
     fun startActivity() {
         // Android习惯模式，传入KClass即可
-        startActivity(MainActivity::class) {
+        startActivity(MainActivity::class, {
+            // 自定义返回 ActivityOptionsCompat, 详细请查看README完整API说明
+            null
+        }) {
             putExtra("key", "value")
         }
 
