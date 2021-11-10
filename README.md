@@ -48,7 +48,7 @@ dependencies {
 可以写`IMangeStartActivity by MangeStartActivity() `, 也可以使用`IMsa by msa()`。完全一样，只是实现了一个简写。
 
 ```kotlin
-// IMSA = IMangeStartActivity
+// IMsa = IMangeStartActivity
 typealias IMsa =  IMangeStartActivity
 
 // msa() = MangeStartActivity()
@@ -58,6 +58,7 @@ fun msa(): MangeStartActivity = MangeStartActivity()
 #### 推荐基于Base类，方便统一管理。
 
 ```kotlin
+// 注意实现 IMsa by msa() 委托
 abstract class BaseActivity : AppCompatActivity(), IMsa by msa() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,6 +70,7 @@ abstract class BaseActivity : AppCompatActivity(), IMsa by msa() {
 ```
 
 ```kotlin
+// 注意实现 IMsa by msa() 委托
 abstract class BaseFragment : Fragment(), IMsa by msa()  {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,7 +86,7 @@ abstract class BaseFragment : Fragment(), IMsa by msa()  {
 完整使用方法说明
 
 ```kotlin
-// 注意实现 `IMsa by msa()`
+// 注意实现 `IMsa by msa()` 委托
 class SampleActivity : AppCompatActivity(), IMsa by msa() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,7 +102,10 @@ class SampleActivity : AppCompatActivity(), IMsa by msa() {
      */
     fun startActivity() {
         // Android习惯模式，传入KClass即可
-        startActivity(MainActivity::class) {
+        startActivity(MainActivity::class, {
+            // 自定义返回 ActivityOptionsCompat, 详细请查看README完整API说明
+            null
+        }) {
             putExtra("key", "value")
         }
 
@@ -182,21 +187,21 @@ class SampleActivity : AppCompatActivity(), IMsa by msa() {
 ### 完整API
 ```kotlin
 // startActivityForResult
-fun startActivityForResult(target: KClass<out Activity>, block: Intent.() -> Unit = {}, result: StartActivityResult)
-fun <T : KClass<out Activity>> T.startForResult(block: Intent.() -> Unit = {}, result: StartActivityResult)
-suspend fun startActivityForResultSync(target: KClass<out Activity>, block: Intent.() -> Unit = {}): Result
-suspend fun <T : KClass<out Activity>> T.startForResultSync( block: Intent.() -> Unit = {}): Result
+fun startActivityForResult(target: KClass<out Activity>, block: Intent.() -> Unit = {}, options: () -> ActivityOptionsCompat? = { null }, result: StartActivityResult)
+fun <T : KClass<out Activity>> T.startForResult(block: Intent.() -> Unit = {}, options: () -> ActivityOptionsCompat? = { null }, result: StartActivityResult)
+suspend fun startActivityForResultSync(target: KClass<out Activity>, options: () -> ActivityOptionsCompat? = { null }, block: Intent.() -> Unit = {}): Result
+suspend fun <T : KClass<out Activity>> T.startForResultSync(options: () -> ActivityOptionsCompat? = { null }, block: Intent.() -> Unit = {}): Result
 
 // intent startActivityForResult
-fun startActivityForResult(intent: Intent, result: StartActivityResult)
-fun Intent.startForResult(result: StartActivityResult)
-suspend fun startActivityForResultSync(intent: Intent): Result
-suspend fun Intent.startForResultSync(): Result
+fun startActivityForResult(intent: Intent, options: () -> ActivityOptionsCompat? = { null }, result: StartActivityResult)
+fun Intent.startForResult(options: () -> ActivityOptionsCompat? = { null }, result: StartActivityResult)
+suspend fun startActivityForResultSync(intent: Intent, options: () -> ActivityOptionsCompat? = { null }): Result
+suspend fun Intent.startForResultSync(options: () -> ActivityOptionsCompat? = { null }): Result
 
 // startActivity
-fun startActivity(target: KClass<out Activity>, block: Intent.() -> Unit = {})
-fun <T : KClass<out Activity>> T.start(block: Intent.() -> Unit = {})
-fun Intent.start()
+fun startActivity(target: KClass<out Activity>, options: () -> ActivityOptionsCompat? = { null }, block: Intent.() -> Unit = {})
+fun <T : KClass<out Activity>> T.start(options: () -> ActivityOptionsCompat? = { null }, block: Intent.() -> Unit = {})
+fun Intent.start(options: () -> ActivityOptionsCompat? = { null })
 ```
 
 ---
