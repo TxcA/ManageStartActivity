@@ -33,7 +33,7 @@ dependencies {
     // need androidx appcompat
     implementation 'androidx.appcompat:appcompat:1.3.1'
     
-    // Mange start activity
+    // Manage start activity
     implementation 'com.itxca.msa:msa:1.0.5'
 }
 ```
@@ -41,18 +41,18 @@ dependencies {
 ---
 ### 文档
 
-- **1.0.4 非兼容升级, 现在必须在`super.onCreate()`后初始化 `initMangeStartActivity` - 详情: [#1](https://github.com/TxcA/ManageStartActivity/issues/1)**
+- **1.0.4 非兼容升级, 现在必须在`super.onCreate()`后初始化 `initManageStartActivity` - 详情: [#1](https://github.com/TxcA/ManageStartActivity/issues/1)**
 
 #### 扩展简写说明
 
-可以写`IMangeStartActivity by MangeStartActivity() `, 也可以使用`IMsa by msa()`。完全一样，只是实现了一个简写。
+可以写`IManageStartActivity by ManageStartActivity() `, 也可以使用`IMsa by msa()`。完全一样，只是实现了一个简写。
 
 ```kotlin
-// IMsa = IMangeStartActivity
-typealias IMsa =  IMangeStartActivity
+// IMsa = IManageStartActivity
+typealias IMsa =  IManageStartActivity
 
-// msa() = MangeStartActivity()
-fun msa(): MangeStartActivity = MangeStartActivity()
+// msa() = ManageStartActivity()
+fun msa(): ManageStartActivity = ManageStartActivity()
 ```
 
 #### 推荐基于Base类，方便统一管理。
@@ -62,7 +62,7 @@ fun msa(): MangeStartActivity = MangeStartActivity()
 abstract class BaseActivity : AppCompatActivity(), IMsa by msa() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // 从 1.0.4 开始, 必须在`super.onCreate()`后初始化 `initMangeStartActivity`
+        // 从 1.0.4 开始, 必须在`super.onCreate()`后初始化 `initManageStartActivity`
         // 因为需要使用 `SavedStateRegistry` 来保存回调状态
         initManageStartActivity()
     }
@@ -74,7 +74,7 @@ abstract class BaseActivity : AppCompatActivity(), IMsa by msa() {
 abstract class BaseFragment : Fragment(), IMsa by msa()  {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // 从 1.0.4 开始, 必须在`super.onCreate()`后初始化 `initMangeStartActivity`
+        // 从 1.0.4 开始, 必须在`super.onCreate()`后初始化 `initManageStartActivity`
         // 因为需要使用 `SavedStateRegistry` 来保存回调状态
         initManageStartActivity()
     }
@@ -91,7 +91,7 @@ class SampleActivity : AppCompatActivity(), IMsa by msa() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // 从 1.0.4 开始, 必须在`super.onCreate()`后初始化 `initMangeStartActivity`
+        // 从 1.0.4 开始, 必须在`super.onCreate()`后初始化 `initManageStartActivity`
         // 因为需要使用 `SavedStateRegistry` 来保存回调状态
         initManageStartActivity()
     }

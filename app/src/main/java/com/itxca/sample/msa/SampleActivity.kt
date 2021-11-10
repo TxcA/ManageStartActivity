@@ -24,7 +24,7 @@ class SampleActivity : AppCompatActivity(), IMsa by msa() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // 从1.0.4开始, 必须在super.onCreate()后初始化 initMangeStartActivity
+        // 从1.0.4开始, 必须在super.onCreate()后初始化 initManageStartActivity
         // 因为需要使用 SavedStateRegistry 来保存回调状态
         initManageStartActivity()
     }
